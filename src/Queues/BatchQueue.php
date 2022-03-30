@@ -90,14 +90,20 @@ class BatchQueue extends DatabaseQueue
         $json = json_decode($payload);
         $data = unserialize($json->data->command);
 
+        $parameters = [
+            'jobId' => $jobId,
+        ];
+
+        if(!empty($data->connection)){
+            // $data->connection seems to have been made optional in newer Laravel versions
+            $parameters['connectionId'] = $data->connection;
+        }
+
         $this->batch->submitJob([
             'jobDefinition' => $this->jobDefinition,
             'jobName'       => $jobName,
             'jobQueue'      => $this->getQueue($queue),
-            'parameters'    => [
-                'jobId'        => $jobId,
-                'connectionId' => $data->connection
-            ]
+            'parameters'    => $parameters
         ]);
 
         return $jobId;
