@@ -21,7 +21,7 @@
   "require": {
     "illuminate/support": ">5.4",
     "aws/aws-sdk-php": "^3.20.6",
-    "cocur/slugify": "^4.1"
+    "cocur/slugify": "4"
   },
   "require-dev": {
     "mockery/mockery": "^0.9.6",
