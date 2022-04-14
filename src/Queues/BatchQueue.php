@@ -12,6 +12,7 @@
 namespace DNXLabs\LaravelQueueAwsBatch\Queues;
 
 use Aws\Batch\BatchClient;
+use Cocur\Slugify\Slugify;
 use Illuminate\Database\Connection;
 use Illuminate\Queue\DatabaseQueue;
 use Illuminate\Queue\Jobs\DatabaseJobRecord;
@@ -99,9 +100,10 @@ class BatchQueue extends DatabaseQueue
             $parameters['connectionId'] = $data->connection;
         }
 
+        $slugify = new Slugify();
         $this->batch->submitJob([
             'jobDefinition' => $this->jobDefinition,
-            'jobName'       => $jobName,
+            'jobName'       =>  $slugify->slugify($jobName), // certain chars are not allowed in AWS batch for the job name
             'jobQueue'      => $this->getQueue($queue),
             'parameters'    => $parameters
         ]);
